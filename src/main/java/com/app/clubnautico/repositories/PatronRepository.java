@@ -12,4 +12,6 @@ public interface PatronRepository extends JpaRepository<Patron,Integer> {
 
     @Query("SELECT p FROM Patron p WHERE p.documentoIdentidad = :documentoIdentidad")
     public Optional<Patron> obtenerPatronByDocumentoIdentidad(String documentoIdentidad);
+
+    public Optional<Patron> findByDocumentoIdentidad(String documentoIdentidad);
 }

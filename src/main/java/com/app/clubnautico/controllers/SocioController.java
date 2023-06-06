@@ -48,7 +48,6 @@ public class SocioController {
                     content = @Content
             )})
     @PostMapping
-    @PermitAll
     public ResponseEntity<?> crearSocio(@RequestBody @Valid SocioBarcoRequest socioBarcoRequest){
         return this.socioService.crearSocio(socioBarcoRequest);
     }
@@ -96,7 +95,7 @@ public class SocioController {
     @Operation(summary = "Actualizar Socio",
             description = "Actualizar datos del socio segun ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Socio actualizado",
+            @ApiResponse(responseCode = "201", description = "Socio actualizado",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = SocioRequest.class))}),
             @ApiResponse(responseCode = "404", description = "No existe socio",
@@ -119,7 +118,7 @@ public class SocioController {
     @Operation(summary = "Eliminar Socio",
             description = "Eliminar socio segun ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Socio eliminado",
+            @ApiResponse(responseCode = "201", description = "Socio eliminado",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema())}),
             @ApiResponse(responseCode = "404", description = "No existe socio",
@@ -139,7 +138,7 @@ public class SocioController {
     @Operation(summary = "Registrar salida con Socio",
             description = "detallar salida con socio como patron")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Salida registrada",
+            @ApiResponse(responseCode = "201", description = "Salida registrada",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = RegistroSalidaSocioRequest.class))}),
             @ApiResponse(responseCode = "404", description = "datos ingresados invalido",

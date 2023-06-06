@@ -48,7 +48,7 @@ public class RegistroSalidaService {
         newPatron.setMovil(socioFound.getMovil());
         newPatron.setEmail(socioFound.getEmail());
 
-        Patron patron = this.patronRepository.obtenerPatronByDocumentoIdentidad(
+        Patron patron = this.patronRepository.findByDocumentoIdentidad(
                 socioFound.getDocumentoIdentidad()).orElse(newPatron);
 
         //definir el formato de fecha

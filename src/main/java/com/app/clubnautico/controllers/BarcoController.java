@@ -45,7 +45,12 @@ public class BarcoController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = BarcoSocioRequest.class))}),
             @ApiResponse(responseCode = "400", description = "No Barco creado",
-                    content = @Content)})
+                    content = @Content),
+            @ApiResponse(
+                    description = "No autorizado / Token invalido",
+                    responseCode = "403",
+                    content = @Content
+            )})
     @PostMapping
     public ResponseEntity<?> crearBarco(@RequestBody @Valid BarcoSocioRequest barcoSocioRequest) {
         Integer requestSocioID = barcoSocioRequest.getSocioID();
@@ -63,7 +68,12 @@ public class BarcoController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = BarcoResponse.class))}),
             @ApiResponse(responseCode = "404", description = "No existen lista de barcos",
-                    content = @Content)})
+                    content = @Content),
+            @ApiResponse(
+                    description = "No autorizado / Token invalido",
+                    responseCode = "403",
+                    content = @Content
+            )})
     @GetMapping
     public ResponseEntity<List<BarcoResponse>> listarBarcos() {
         return this.barcoService.listarBarcos();
@@ -77,7 +87,12 @@ public class BarcoController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = BarcoSalidaResponse.class))}),
             @ApiResponse(responseCode = "404", description = "No existe barco",
-                    content = @Content)})
+                    content = @Content),
+            @ApiResponse(
+                    description = "No autorizado / Token invalido",
+                    responseCode = "403",
+                    content = @Content
+            )})
     @GetMapping("/{barcoID}")
     public ResponseEntity<BarcoSalidaResponse> obtenerBarcoSegunID(@Parameter(description = "Insertar barcoID")
                                                                    @PathVariable Integer barcoID) {
@@ -93,7 +108,12 @@ public class BarcoController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = BarcoRequest.class))}),
             @ApiResponse(responseCode = "404", description = "datos ingresados invalido",
-                    content = @Content)})
+                    content = @Content),
+            @ApiResponse(
+                    description = "No autorizado / Token invalido",
+                    responseCode = "403",
+                    content = @Content
+            )})
     @PostMapping("/salidas")
     public ResponseEntity<?> crearSalidaSegunBarcoID(@RequestBody RegistroSalidaPatronRequest salidaPatronRequest) {
         return this.barcoService.crearSalidaSegunBarcoID(salidaPatronRequest);
@@ -109,7 +129,12 @@ public class BarcoController {
             @ApiResponse(responseCode = "404", description = "No existe barco",
                     content = @Content),
             @ApiResponse(responseCode = "400", description = "datos ingresados invalido",
-                    content = @Content)})
+                    content = @Content),
+            @ApiResponse(
+                    description = "No autorizado / Token invalido",
+                    responseCode = "403",
+                    content = @Content
+            )})
     @PutMapping("/{barcoID}")
     public ResponseEntity<?> actualizarBarcoSegunID(@Parameter(description = "Insertar barcoID")
                                                     @PathVariable Integer barcoID,
@@ -125,7 +150,12 @@ public class BarcoController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema())}),
             @ApiResponse(responseCode = "404", description = "No existe barco",
-                    content = @Content)})
+                    content = @Content),
+            @ApiResponse(
+                    description = "No autorizado / Token invalido",
+                    responseCode = "403",
+                    content = @Content
+            )})
     @DeleteMapping("/{barcoID}")
     public ResponseEntity<?> eliminarBarcoSegunID(@Parameter(description = "Insertar barcoID")
                                                       @PathVariable Integer barcoID){
@@ -140,7 +170,12 @@ public class BarcoController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema())}),
             @ApiResponse(responseCode = "404", description = "No existe salida",
-                    content = @Content)})
+                    content = @Content),
+            @ApiResponse(
+                    description = "No autorizado / Token invalido",
+                    responseCode = "403",
+                    content = @Content
+            )})
     @DeleteMapping("/salidas/{salidaID}")
     public ResponseEntity<?> eliminarSalidaSegunID(@Parameter(description = "Insertar salidaID")
                                                    @PathVariable Integer salidaID){
