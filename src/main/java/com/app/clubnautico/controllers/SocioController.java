@@ -12,7 +12,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,8 +41,14 @@ public class SocioController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = SocioBarcoRequest.class))}),
             @ApiResponse(responseCode = "400", description = "No socio creado",
-                    content = @Content)})
+                    content = @Content),
+            @ApiResponse(
+                    description = "No autorizado / Token invalido",
+                    responseCode = "403",
+                    content = @Content
+            )})
     @PostMapping
+    @PermitAll
     public ResponseEntity<?> crearSocio(@RequestBody @Valid SocioBarcoRequest socioBarcoRequest){
         return this.socioService.crearSocio(socioBarcoRequest);
     }
@@ -49,11 +57,16 @@ public class SocioController {
     @Operation(summary = "Listar Socios",
             description = "Listado de socios")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de socios",
+            @ApiResponse(responseCode = "202", description = "Lista de socios",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = SocioResponse.class))}),
             @ApiResponse(responseCode = "404", description = "No existen lista de socios",
-                    content = @Content)})
+                    content = @Content),
+            @ApiResponse(
+                    description = "No autorizado / Token invalido",
+                    responseCode = "403",
+                    content = @Content
+            )})
     @GetMapping
     public ResponseEntity<List<SocioResponse>> listarSocio(){
         return this.socioService.listarSocio();
@@ -67,7 +80,12 @@ public class SocioController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = SocioBarcoResponse.class))}),
             @ApiResponse(responseCode = "404", description = "No existe socio",
-                    content = @Content)})
+                    content = @Content),
+            @ApiResponse(
+                    description = "No autorizado / Token invalido",
+                    responseCode = "403",
+                    content = @Content
+            )})
     @GetMapping("/{socioID}")
     public ResponseEntity<SocioBarcoResponse> obtenerSocioByID(@Parameter(description = "Insertar socioID")
                                                                @PathVariable Integer socioID){
@@ -84,7 +102,12 @@ public class SocioController {
             @ApiResponse(responseCode = "404", description = "No existe socio",
                     content = @Content),
             @ApiResponse(responseCode = "400", description = "datos ingresados invalido",
-                    content = @Content)})
+                    content = @Content),
+            @ApiResponse(
+                    description = "No autorizado / Token invalido",
+                    responseCode = "403",
+                    content = @Content
+            )})
     @PutMapping("/{socioID}")
     public ResponseEntity<?> actualizarSociobyID(@Parameter(description = "Insertar socioID")
                                                 @PathVariable Integer socioID,
@@ -100,7 +123,12 @@ public class SocioController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema())}),
             @ApiResponse(responseCode = "404", description = "No existe socio",
-                    content = @Content)})
+                    content = @Content),
+            @ApiResponse(
+                    description = "No autorizado / Token invalido",
+                    responseCode = "403",
+                    content = @Content
+            )})
     @DeleteMapping("/{socioID}")
     public ResponseEntity<?> eliminarSocioByID(@Parameter(description = "Insertar socioID")
                                                @PathVariable Integer socioID){
@@ -115,7 +143,12 @@ public class SocioController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = RegistroSalidaSocioRequest.class))}),
             @ApiResponse(responseCode = "404", description = "datos ingresados invalido",
-                    content = @Content)})
+                    content = @Content),
+            @ApiResponse(
+                    description = "No autorizado / Token invalido",
+                    responseCode = "403",
+                    content = @Content
+            )})
     @PostMapping("/{socioID}/barcos/{barcoID}/salidas")
     public ResponseEntity<?> registrarSalidaSocioByID(@RequestBody @Valid RegistroSalidaSocioRequest salidaRequest){
         return this.socioService.registrarSalidaSocioByID(salidaRequest);

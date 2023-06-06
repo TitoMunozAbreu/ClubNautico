@@ -44,7 +44,7 @@ public class RegistroSalida {
     private Barco barco;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "persona_id",
-            foreignKey = @ForeignKey(name = "FK_persona_id"))
+    @JoinColumn(name = "patron_id",
+            foreignKey = @ForeignKey(name = "FK_patron_id"))
     private Patron patron;
 }
