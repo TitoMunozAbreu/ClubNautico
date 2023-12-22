@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -111,6 +112,8 @@ public class BarcoService {
         Set<BarcoResponse> barcoResponseSet = this.barcoRepository.listarBarcosBySocioID(socioID).stream()
                 .map(barco -> {
                     BarcoResponse barcoResponse = BarcoResponse.builder()
+                            .id(barco.getBarcoID())
+                            .numeroMatricula(barco.getNumeroMatricula())
                             .cuotaPago(barco.getCuotaPago())
                             .numeroAmarre(barco.getNumeroAmarre())
                             .nombre(barco.getNombre())
@@ -202,9 +205,7 @@ public class BarcoService {
         //devolver respuesta
         return ResponseEntity.status(HttpStatus.CREATED)
                 .headers(headers)
-                .body("{\"mensaje\":\" " + "Barco: "
-                        + barcoFound.getNombre()
-                        + ", actualizado.\"}");
+                .body(Map.of("mensaje", "Socio: " + barcoFound.getNombre() + " actualizado."));
 
 
     }

@@ -12,7 +12,10 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class SocioBarcoResponse {
+    private Integer id;
     private String nombre;
     private String apellidos;
+    private String movil;
+    private String email;
     private Set<BarcoResponse> barcos;
 }

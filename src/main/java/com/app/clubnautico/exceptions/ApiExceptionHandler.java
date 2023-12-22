@@ -1,5 +1,7 @@
 package com.app.clubnautico.exceptions;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -8,8 +10,11 @@ import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -19,10 +24,48 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)  //provide hierarchy for handling exceptions from the controller
-@ControllerAdvice
+@RestControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(NoSuchElementException.class)
+    @ExceptionHandler({BadCredentialsException.class})
+    public ResponseEntity<Object> hanldeBadCredentialsException(HttpServletRequest request, BadCredentialsException ex) {
+        String errorMsg = "Acceso invalido, usuario y contraseña";
+        String path = request.getRequestURI();
+        return buildResponseEntity(new ApiException(HttpStatus.UNAUTHORIZED,
+                errorMsg,
+                path));
+
+    }
+
+    @ExceptionHandler({AccessDeniedException.class})
+    public ResponseEntity<Object> hanldeAccessDeniedException(HttpServletRequest request, AccessDeniedException ex) {
+        String errorMsg = "Acceso invalido, usuario no autorizado";
+        String path = request.getRequestURI();
+        return buildResponseEntity(new ApiException(HttpStatus.FORBIDDEN,
+                errorMsg,
+                path));
+    }
+
+    @ExceptionHandler({SignatureException.class})
+    public ResponseEntity<Object> hanldeSignatureException(HttpServletRequest request, SignatureException ex) {
+        String errorMsg = "Token invalido";
+        String path = request.getRequestURI();
+        return buildResponseEntity(new ApiException(HttpStatus.FORBIDDEN,
+                errorMsg,
+                path));
+    }
+
+    @ExceptionHandler({ExpiredJwtException.class})
+    public ResponseEntity<Object> hanldeExpiredJwtException(HttpServletRequest request, ExpiredJwtException ex) {
+        String errorMsg = "Token ha expirado";
+        String path = request.getRequestURI();
+        return buildResponseEntity(new ApiException(HttpStatus.FORBIDDEN,
+                errorMsg,
+                path));
+    }
+
+
+    @ExceptionHandler({NoSuchElementException.class})
     public ResponseEntity<Object> hanldeNoSuchElementException(HttpServletRequest request, NoSuchElementException ex) {
         String errorMsg = "No es posible realizar la consulta: " + ex.getMessage();
 

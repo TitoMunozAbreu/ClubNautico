@@ -10,12 +10,14 @@ import com.app.clubnautico.domain.response.SocioResponse;
 import com.app.clubnautico.repositories.SocioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -49,10 +51,10 @@ public class SocioService {
         newSocio.setMovil(socioBarcoRequest.getMovil());
 
         //almacenar si exise lista de barcos
-        boolean listaBarcoVacia = socioBarcoRequest.getBarcos().isEmpty();
+//        boolean listaBarcoVacia = socioBarcoRequest.getBarcos().isEmpty();
 
         //comprobar si el socio posee barcos
-        if (!listaBarcoVacia) {
+        if (socioBarcoRequest.getBarcos() != null && !socioBarcoRequest.getBarcos().isEmpty()) {
             //crear cada objeto de la lista en el BarcoRepository
             socioBarcoRequest.getBarcos()
                     .stream()
@@ -71,11 +73,11 @@ public class SocioService {
         //devolver respuesta
         return ResponseEntity.status(HttpStatus.CREATED)
                 .headers(headers)
-                .body("{\"mensaje\":\" " + "Socio: " + newSocio.getNombre() + " " + newSocio.getApellidos() + " creado con exito.\"}");
+                .body(Map.of("mensaje", "Socio: " + newSocio.getNombre() + " " + newSocio.getApellidos() + " creado con exito."));
     }
 
     @Transactional
-    public ResponseEntity<List<SocioResponse>> listarSocio() {
+    public ResponseEntity<Page<SocioResponse>> listarSocio(String nombre, int page, int size) {
         try {
 
             boolean listaSocioVacia = this.socioRepository.findAll().isEmpty();
@@ -84,14 +86,21 @@ public class SocioService {
                 //lanzar excepcion si esta vacia la lista
                 throw new NoSuchElementException("No existen socios creados");
             }
+
             //mapear la lista encontrada al socioResponse
-            List<SocioResponse> socioResponseList = this.socioRepository.findAll().stream()
+            Page<SocioResponse> socioPage = this.socioRepository.findByNombreContaining(nombre, PageRequest.of(page, size))
+                    .map(socio -> new SocioResponse(
+                    socio.getSocioId(),
+                    socio.getNombre(),
+                    socio.getApellidos()));
+
+/*            List<SocioResponse> socioResponseList = this.socioRepository.findAll(pageable).stream()
                     .map(socio -> {
                         SocioResponse socioResponse = new SocioResponse(
                                 socio.getNombre(),
                                 socio.getApellidos());
                         return socioResponse;
-                    }).collect(Collectors.toList());
+                    }).collect(Collectors.toList());*/
 
             //personalizar header
             HttpHeaders headers = new HttpHeaders();
@@ -100,7 +109,7 @@ public class SocioService {
             //delvolver el lista de socios
             return ResponseEntity.status(HttpStatus.ACCEPTED)
                     .headers(headers)
-                    .body(socioResponseList);
+                    .body(socioPage);
 
         } catch (NoSuchElementException ex) {
             throw new NoSuchElementException(ex.getMessage());
@@ -115,8 +124,11 @@ public class SocioService {
 
         //mapear socioFound a socioBarcoResponse
         SocioBarcoResponse socioBarcoResponse = SocioBarcoResponse.builder()
+                .id(socioFound.getSocioId())
                 .nombre(socioFound.getNombre())
                 .apellidos(socioFound.getApellidos())
+                .email(socioFound.getEmail())
+                .movil(socioFound.getMovil())
                 .barcos(Set.of())
                 .build();
 
@@ -154,7 +166,6 @@ public class SocioService {
                 .orElseThrow(() -> new NoSuchElementException("No existe socio ID: " + socioID));
 
         //actualizar datos del socio found
-        socioFound.setDocumentoIdentidad(socioRequest.getDocumentoIdentidad());
         socioFound.setNombre(socioRequest.getNombre());
         socioFound.setApellidos(socioRequest.getApellidos());
         socioFound.setMovil(socioRequest.getMovil());
@@ -169,7 +180,7 @@ public class SocioService {
         //devolver el respuesta
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .headers(headers)
-                .body("{\"mensaje\":\" " + "Socio: " + socioFound.getNombre() + " " + socioFound.getApellidos() + " actualizado con exito.\"}");
+                .body(Map.of("mensaje", "Socio: " + socioFound.getNombre() + " " + socioFound.getApellidos() + "  actualizado con exito."));
 
     }
 
@@ -219,9 +230,25 @@ public class SocioService {
         //devolver respuesta
         return ResponseEntity.status(HttpStatus.CREATED)
                 .headers(headers)
-                .body("{\"mensaje\":\" " + "Socio: " + socioFound.getNombre()
-                        + " " + socioFound.getApellidos() + " ha sido eliminado.\"}");
+                .body(Map.of("mensaje", "Socio: " + socioFound.getNombre() + " " + socioFound.getApellidos() + "  ha sido eliminado."));
     }
+
+    @Transactional
+    public ResponseEntity<?> existeSocioPorDocumentoIdentidad(String documentoIdentidad){
+        boolean existeDocumetoIdentidad = this.socioRepository.existsSocioByDocumentoIdentidad(documentoIdentidad);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Map.of("existeDniNie", existeDocumetoIdentidad));
+    }
+
+    @Transactional
+    public ResponseEntity<?> existeSocioPorEmail(String email){
+        boolean existeDocumetoIdentidad = this.socioRepository.existsSocioByEmail(email);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Map.of("existeEmail", existeDocumetoIdentidad));
+    }
+
 
 
 }

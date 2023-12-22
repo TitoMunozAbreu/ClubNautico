@@ -12,15 +12,18 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/socios")
@@ -48,7 +51,9 @@ public class SocioController {
                     content = @Content
             )})
     @PostMapping
-    public ResponseEntity<?> crearSocio(@RequestBody @Valid SocioBarcoRequest socioBarcoRequest){
+    public ResponseEntity<?> crearSocio(@RequestBody @Valid SocioBarcoRequest socioBarcoRequest,
+                                        Authentication authentication){
+
         return this.socioService.crearSocio(socioBarcoRequest);
     }
 
@@ -67,10 +72,23 @@ public class SocioController {
                     content = @Content
             )})
     @GetMapping
-    public ResponseEntity<List<SocioResponse>> listarSocio(){
-        return this.socioService.listarSocio();
+    public ResponseEntity<Page<SocioResponse>> listarSocio(@RequestParam Optional<String> nombre,
+                                                           @RequestParam Optional<Integer> page,
+                                                           @RequestParam Optional<Integer> size){
+        return this.socioService.listarSocio(nombre.orElse(""),
+                                            page.orElse(0),
+                                            size.orElse(5));
     }
 
+    @GetMapping("/existeDniNie")
+    public ResponseEntity<?> existeSocioPorDocumentoIdentidad(@RequestParam String dniNie){
+        return this.socioService.existeSocioPorDocumentoIdentidad(dniNie);
+    }
+
+    @GetMapping("/existeEmail")
+    public ResponseEntity<?> existeSocioPorEmail(@RequestParam String email){
+        return this.socioService.existeSocioPorEmail(email);
+    }
 
     @Operation(summary = "Obtener Socio",
             description = "obtener datos del socio segun ID")
@@ -153,5 +171,7 @@ public class SocioController {
         return this.socioService.registrarSalidaSocioByID(salidaRequest);
 
     }
+
+
 
 }

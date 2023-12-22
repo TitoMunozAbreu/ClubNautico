@@ -1,29 +1,51 @@
 package com.app.clubnautico.auth;
 
+import com.app.clubnautico.domain.request.SocioBarcoRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/v2/auth")
 @RequiredArgsConstructor
+@Tag(name = "Autenticación", description = "controlador para autenticacion - registro de usuario")
 public class AuthenticationController {
 
     private final AuthenticationService service;
 
-    //register
+    @Operation(summary = "Registrar Usuario",
+            description = "Registrar Usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuario registrado",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = AuthenticationResponse.class))}),
+            @ApiResponse(responseCode = "400", description = "Usuario no registrado",
+                    content = @Content)})
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(service.register(request));
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid RegisterRequest request) {
+        return  service.register(request);
     }
 
 
-    //authenticate
+    @Operation(summary = "Autenticar Usuario",
+            description = "Autenticar Usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuario auntenticado",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = AuthenticationResponse.class))}),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Acceso invalido: autenticacion invalida",
+                    content = @Content)})
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
-        return ResponseEntity.ok(service.authenticate(request));
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody @Valid AuthenticationRequest request) {
+        return service.authenticate(request);
     }
 }

@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class BarcoResponse {
+    private Integer id;
     private String nombre;
+    private String numeroMatricula;
     private int numeroAmarre;
     private double cuotaPago;
 }

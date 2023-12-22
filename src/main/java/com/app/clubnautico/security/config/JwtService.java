@@ -55,7 +55,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername()) //en este caso es el email para nuestra clase de user
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 *24)) //sera valido por 24h + 1000 miliseconds
+                .setExpiration(new Date(System.currentTimeMillis() + (3600 * 1000))) //sera valido por 1h
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

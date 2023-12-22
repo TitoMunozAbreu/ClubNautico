@@ -2,10 +2,7 @@ package com.app.clubnautico.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -17,6 +14,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(exclude = "socio")
 @Builder
 public class Barco implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -37,7 +35,7 @@ public class Barco implements Serializable {
     @NotNull(message = "debes registrar el numero de amarre")
     @Column(name = "numero_amarre",
             columnDefinition = "TINYINT(2) UNSIGNED")
-    @Digits(integer = 2,fraction = 0, message = "debes ingresar un numero de Amarre maximo 2 digitos")
+    @Digits(integer = 3,fraction = 0, message = "debes ingresar un numero de Amarre maximo 3 digitos")
     @Positive(message = "Debes ingresar un numero de amarre positivo-entero")
     private int numeroAmarre;
 

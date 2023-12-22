@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SocioRequest {
-    private String documentoIdentidad;
     private String nombre;
     private String apellidos;
     private String movil;

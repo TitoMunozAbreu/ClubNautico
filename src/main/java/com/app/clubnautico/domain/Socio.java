@@ -13,11 +13,11 @@ import java.util.Set;
         uniqueConstraints = {@UniqueConstraint(name = "documento_identidad",
                 columnNames = "documento_identidad")})
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = "barcos")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Socio extends Persona implements Serializable {
-    private static final long serialVersionUID = 1L;
+private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class Socio extends Persona implements Serializable {
     @Column(name = "documento_identidad",
             length = 9)
     @NotBlank(message = "debes ingresar un DNI o NIE")
-    @ValidacionIdentidad
+/*    @ValidacionIdentidad*/
     private String documentoIdentidad;
 
     @OneToMany(mappedBy = "socio",

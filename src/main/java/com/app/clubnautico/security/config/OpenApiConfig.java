@@ -14,12 +14,12 @@ import io.swagger.v3.oas.annotations.servers.Server;
         info = @Info(
                 contact = @Contact(
                         name = "Tito",
-                        email = "tito.munoz@atos.net",
+                        email = "tito.munoza@eviden.com",
                         url = "https://github.com/TitoMunozAbreu/ClubNautico"
                 ),
                 description = "OpenApi documentacion aplicación club nautico",
                 title = " Club nautico",
-                version = "1.0",
+                version = "2.0",
                 license = @License(
                         name = "nombre licencia",
                         url = "https://alguna-url.com"
