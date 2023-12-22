@@ -27,7 +27,7 @@ private static final long serialVersionUID = 1L;
     @Column(name = "documento_identidad",
             length = 9)
     @NotBlank(message = "debes ingresar un DNI o NIE")
-/*    @ValidacionIdentidad*/
+    @ValidacionIdentidad
     private String documentoIdentidad;
 
     @OneToMany(mappedBy = "socio",
