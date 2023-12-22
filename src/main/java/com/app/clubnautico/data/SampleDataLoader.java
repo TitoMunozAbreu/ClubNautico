@@ -30,7 +30,7 @@ public class SampleDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-  /*      logger.info("Cargando datos...");
+        logger.info("Cargando datos...");
         //CREACION DE SOCIOS
         SocioBarcoRequest sbr1 = new SocioBarcoRequest(
                 "X1234567D",
@@ -140,7 +140,6 @@ public class SampleDataLoader implements CommandLineRunner {
         socioService.crearSocio(sbr10);
         socioService.crearSocio(sbr11);
         socioService.crearSocio(sbr12);
-*/
 
     }
 
